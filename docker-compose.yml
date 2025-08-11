@@ -1,0 +1,44 @@
+# docker-compose.yml (place in project root)
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: affiliate-chain-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: affiliate_chain
+      POSTGRES_USER: affiliate_user
+      POSTGRES_PASSWORD: affiliate_password123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - affiliate-network
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: affiliate-chain-pgadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@affiliate.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - affiliate-network
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  affiliate-network:
+    driver: bridge

@@ -1,0 +1,66 @@
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+.next/cache/
+out/
+dist/
+build/
+
+# Caches
+.cache/
+.parcel-cache/
+.turbo/
+.pnpm-store/
+.eslintcache
+.stylelintcache
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Env files (keep only example) ---
+.env
+.env.*
+!.env.example
+
+# --- Testing / Coverage ---
+coverage/
+.nyc_output/
+
+# --- Storybook (if used) ---
+storybook-static/
+
+# --- Prisma ---
+# Keep migrations in git; ignore local sqlite databases, if any
+prisma/*.db
+prisma/*.db-journal
+
+# --- IDEs ---
+# JetBrains (WebStorm/IntelliJ)
+.idea/
+*.iml
+
+# VS Code (ignore workspace state; keep sharable configs)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# --- Docker (local volumes/temp) ---
+docker/*/data/
+docker/*/tmp/
+*.pid
+
+# --- Misc editor swaps ---
+*.swp
+*.swo
+*.orig
