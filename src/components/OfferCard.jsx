@@ -1,46 +1,59 @@
 // src/components/OfferCard.jsx
 export default function OfferCard({ offer, onDecline, onAccept }) {
     return (
-        <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            {/* Savings Badge */}
-            <div className="bg-red-100 text-red-600 text-sm font-medium px-4 py-2 rounded-md text-center mb-6">
-                {offer.savingsText}
-            </div>
+        <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-auto animate-fade-in-up">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8 lg:p-10 relative overflow-hidden hover:shadow-2xl transition-all duration-300">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-transparent rounded-full transform translate-x-16 -translate-y-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-red-50 to-transparent rounded-full transform -translate-x-12 translate-y-12"></div>
 
-            {/* Offer Content */}
-            <div className="flex items-start gap-4 mb-6">
-                {/* Icon/Logo */}
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                        <span className="text-blue-600 font-bold text-lg">🏷️</span>
+                {/* Content wrapper */}
+                <div className="relative z-10">
+                    {/* Savings Badge */}
+                    <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm sm:text-base font-bold px-6 py-3 rounded-xl text-center mb-8 shadow-lg transform hover:scale-105 transition-transform">
+                        {offer.savingsText}
+                    </div>
+
+                    {/* Offer Content */}
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+                        {/* Icon/Logo */}
+                        <div className="relative">
+                            <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center">
+                                    <span className="text-blue-600 font-bold text-xl sm:text-2xl">🏷️</span>
+                                </div>
+                            </div>
+                            {/* Glow effect */}
+                            <div className="absolute inset-0 bg-blue-400 rounded-2xl blur-xl opacity-25 -z-10"></div>
+                        </div>
+
+                        {/* Offer Text */}
+                        <div className="flex-1 text-center sm:text-left">
+                            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 leading-tight">
+                                {offer.title}
+                            </h3>
+                            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                                {offer.description}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                            onClick={onDecline}
+                            className="flex-1 px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5 text-base sm:text-lg"
+                        >
+                            Decline
+                        </button>
+                        <button
+                            onClick={onAccept}
+                            className="flex-1 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5 text-base sm:text-lg"
+                        >
+                            Accept
+                        </button>
                     </div>
                 </div>
-
-                {/* Offer Text */}
-                <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-blue-600 mb-2">
-                        {offer.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        {offer.description}
-                    </p>
-                </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-                <button
-                    onClick={onDecline}
-                    className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-md font-medium hover:bg-gray-300 transition-colors"
-                >
-                    Decline
-                </button>
-                <button
-                    onClick={onAccept}
-                    className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors"
-                >
-                    Accept
-                </button>
             </div>
         </div>
     );

@@ -78,7 +78,7 @@ export default function OfferChainContainer() {
     // Loading state
     if (sessionLoading || offersLoading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">
@@ -92,8 +92,8 @@ export default function OfferChainContainer() {
     // Error state
     if (sessionError || offersError) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+                <div className="text-center max-w-md">
                     <div className="text-red-600 text-xl mb-4">⚠️ Error</div>
                     <p className="text-gray-600 mb-4">{sessionError || offersError}</p>
                     <button
@@ -110,7 +110,7 @@ export default function OfferChainContainer() {
     // No offers state
     if (!offers.length) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="text-center">
                     <p className="text-gray-600">No offers available</p>
                 </div>
@@ -119,15 +119,23 @@ export default function OfferChainContainer() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 w-full relative">
+            {/* Background decoration */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-200/20 rounded-full blur-3xl"></div>
+            </div>
+
             {/* Progress Chain */}
-            <ProgressChain
-                currentStep={currentStep}
-                totalSteps={offers.length}
-            />
+            <div className="w-full relative z-10">
+                <ProgressChain
+                    currentStep={currentStep}
+                    totalSteps={offers.length}
+                />
+            </div>
 
             {/* Main Offer Content */}
-            <div className="container mx-auto px-4 py-8">
+            <div className="w-full min-h-[calc(100vh-200px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
                 <OfferCard
                     offer={{
                         title: currentOffer.title,
@@ -140,14 +148,15 @@ export default function OfferChainContainer() {
             </div>
 
             {/* Debug Info (remove in production) */}
-            <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg text-xs max-w-xs">
-                <div className="font-semibold mb-2">Debug Info:</div>
-                <div>Current Step: {currentStep}/{offers.length}</div>
-                <div>Offer ID: {currentOffer?.offerId}</div>
-                <div>Lead ID: {leadId}</div>
-                <div>Session ID: {sessionId}</div>
-                <div>Total Offers: {offers.length}</div>
-            </div>
+            {/*<div className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg text-xs max-w-xs z-50 hidden lg:block border border-gray-200">*/}
+            {/*    <div className="font-semibold mb-2 text-gray-700">Debug Info:</div>*/}
+            {/*    <div className="space-y-1 text-gray-600">*/}
+            {/*        <div>Step: {currentStep}/{offers.length}</div>*/}
+            {/*        <div>Offer: {currentOffer?.offerId?.slice(0, 8)}...</div>*/}
+            {/*        <div>Lead: {leadId?.slice(0, 8)}...</div>*/}
+            {/*        <div>Session: {sessionId?.slice(0, 8)}...</div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </div>
     );
 }

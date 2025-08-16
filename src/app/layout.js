@@ -22,14 +22,7 @@ export default function RootLayout({ children }) {
                         </div>
                         <span className="text-xl font-semibold text-gray-800">WiseSavings</span>
                     </div>
-                    <div className="flex items-center space-x-4">
-                        <a
-                            href="/admin"
-                            className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
-                        >
-                            Admin
-                        </a>
-                    </div>
+                    {/* Admin button removed - access via /admin directly */}
                 </div>
             </div>
         </header>

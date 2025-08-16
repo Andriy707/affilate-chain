@@ -14,7 +14,7 @@ export function useUserSession() {
                 setLoading(true);
 
                 // Generate a session ID for this browser session
-                const newSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                const newSessionId = crypto.randomUUID();
                 setSessionId(newSessionId);
 
                 // Get or create lead
