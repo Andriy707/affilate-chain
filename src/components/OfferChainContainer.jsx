@@ -1,4 +1,4 @@
-// src/components/OfferChainContainer.jsx
+// src/components/OfferChainContainer.jsx - Updated with debug panel
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -13,8 +13,8 @@ export default function OfferChainContainer() {
     const [offersLoading, setOffersLoading] = useState(true);
     const [offersError, setOffersError] = useState(null);
 
-    // Use user session hook for lead tracking
-    const { leadId, sessionId, loading: sessionLoading, error: sessionError, trackAction } = useUserSession();
+    // Use user session hook for lead tracking (now with better debugging)
+    const { leadId, sessionId, loading: sessionLoading, error: sessionError, trackAction, debugInfo } = useUserSession();
 
     // Get current offer
     const currentOffer = offers[currentOfferIndex];
@@ -27,10 +27,10 @@ export default function OfferChainContainer() {
                 setOffersLoading(true);
                 const offersData = await apiService.getOffers();
                 setOffers(offersData);
-                console.log('Loaded offers:', offersData.length);
+                console.log('📦 Loaded offers:', offersData.length);
                 setOffersLoading(false);
             } catch (err) {
-                console.error('Error fetching offers:', err);
+                console.error('❌ Error fetching offers:', err);
                 setOffersError(err.message);
                 setOffersLoading(false);
             }
@@ -43,35 +43,50 @@ export default function OfferChainContainer() {
     const handleDecline = async () => {
         if (!currentOffer) return;
 
-        await trackAction(ACTION_TYPES.DECLINE, currentOffer.offerId, currentStep);
+        try {
+            await trackAction(ACTION_TYPES.DECLINE, currentOffer.offerId, currentStep);
 
-        // Move to next offer, or loop back to first if at the end
-        const nextIndex = (currentOfferIndex + 1) % offers.length;
-        setCurrentOfferIndex(nextIndex);
+            // Move to next offer, or loop back to first if at the end
+            const nextIndex = (currentOfferIndex + 1) % offers.length;
+            setCurrentOfferIndex(nextIndex);
+        } catch (err) {
+            console.error('❌ Error tracking decline action:', err);
+            // Still proceed to next offer even if tracking fails
+            const nextIndex = (currentOfferIndex + 1) % offers.length;
+            setCurrentOfferIndex(nextIndex);
+        }
     };
 
     // Handle accept action
     const handleAccept = async () => {
         if (!currentOffer) return;
 
-        await trackAction(ACTION_TYPES.SUBMIT, currentOffer.offerId, currentStep);
+        try {
+            await trackAction(ACTION_TYPES.SUBMIT, currentOffer.offerId, currentStep);
 
-        // Redirect to affiliate URL
-        console.log('Redirecting to:', currentOffer.affiliateUrl);
+            // Redirect to affiliate URL
+            console.log('🔗 Redirecting to:', currentOffer.affiliateUrl);
 
-        // In production: window.open(currentOffer.affiliateUrl, '_blank');
-        // For demo, show alert and move to next offer
-        alert(`Redirecting to: ${currentOffer.affiliateUrl}`);
+            // In production: window.open(currentOffer.affiliateUrl, '_blank');
+            // For demo, show alert and move to next offer
+            alert(`Would redirect to: ${currentOffer.affiliateUrl}`);
 
-        // Move to next offer
-        const nextIndex = (currentOfferIndex + 1) % offers.length;
-        setCurrentOfferIndex(nextIndex);
+            // Move to next offer
+            const nextIndex = (currentOfferIndex + 1) % offers.length;
+            setCurrentOfferIndex(nextIndex);
+        } catch (err) {
+            console.error('❌ Error tracking accept action:', err);
+            // Still proceed to next offer even if tracking fails
+            const nextIndex = (currentOfferIndex + 1) % offers.length;
+            setCurrentOfferIndex(nextIndex);
+        }
     };
 
     // Track page view when offer changes
     useEffect(() => {
         if (currentOffer && leadId && !sessionLoading && !offersLoading) {
-            trackAction(ACTION_TYPES.VIEW, currentOffer.offerId, currentStep);
+            trackAction(ACTION_TYPES.VIEW, currentOffer.offerId, currentStep)
+                .catch(err => console.error('❌ Error tracking view action:', err));
         }
     }, [currentOfferIndex, currentOffer, leadId, sessionLoading, offersLoading]);
 
@@ -84,6 +99,14 @@ export default function OfferChainContainer() {
                     <p className="text-gray-600">
                         {sessionLoading ? 'Initializing session...' : 'Loading offers...'}
                     </p>
+                    {/* Show debug info during loading in development */}
+                    {process.env.NODE_ENV === 'development' && (
+                        <div className="mt-4 text-xs text-gray-500">
+                            Session ID: {sessionId ? `${sessionId.slice(0, 8)}...` : 'Generating...'}
+                            <br />
+                            Lead ID: {leadId ? `${leadId.slice(0, 8)}...` : 'Loading...'}
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -147,16 +170,12 @@ export default function OfferChainContainer() {
                 />
             </div>
 
-            {/* Debug Info (remove in production) */}
-            {/*<div className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg text-xs max-w-xs z-50 hidden lg:block border border-gray-200">*/}
-            {/*    <div className="font-semibold mb-2 text-gray-700">Debug Info:</div>*/}
-            {/*    <div className="space-y-1 text-gray-600">*/}
-            {/*        <div>Step: {currentStep}/{offers.length}</div>*/}
-            {/*        <div>Offer: {currentOffer?.offerId?.slice(0, 8)}...</div>*/}
-            {/*        <div>Lead: {leadId?.slice(0, 8)}...</div>*/}
-            {/*        <div>Session: {sessionId?.slice(0, 8)}...</div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+            {/*/!* Debug Panel - only shows in development *!/*/}
+            {/*<DebugSessionPanel*/}
+            {/*    leadId={leadId}*/}
+            {/*    sessionId={sessionId}*/}
+            {/*    debugInfo={debugInfo}*/}
+            {/*/>*/}
         </div>
     );
 }
